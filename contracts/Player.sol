@@ -41,8 +41,4 @@ contract Player
     function setLatestGame(address gameAddress) public onlyGameManager{
         recentCreatedGame = gameAddress;
     }
-
-
-
-
 }

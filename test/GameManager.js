@@ -10,7 +10,7 @@ contract('GM', accounts => {
         instance = await GM.new()
     })
 
-    it('should be valid instance', async () =>{
+    it('should be valid instance GM', async () =>{
         assert.equal(typeof instance, 'object')
     })
 

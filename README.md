@@ -13,5 +13,10 @@
 
 ### Run Test 
 ````
-   truffle test --network ganache  
+            
 ````
+### Run Test 
+````
+   truffle migrate --network ganache  
+````
+

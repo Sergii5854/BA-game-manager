@@ -11,7 +11,7 @@ contract('Player', accounts => {
         instance = await Player.new(nickName,account, owner)
     })
 
-    it('should be valid instance', async () =>{
+    it('should be valid instance Player', async () =>{
         assert.equal(typeof instance, 'object')
     })
 
