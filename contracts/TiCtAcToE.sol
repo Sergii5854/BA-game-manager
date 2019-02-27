@@ -1,16 +1,19 @@
 pragma solidity 0.5.0;
+import './Player.sol';
 
 contract TiCtAcToE
 {
     uint8 leftMoves;
     bool public  isReady;
     address public activeUser;
+    address public gm;
     address public player1; // 1 = o
     address public player2; // 7 = x
     uint8[][] public board;
     address public winner = address(0);
 
     constructor() public {
+        this.gm = gm  ;
         isReady = true;
         leftMoves = 9;
         initArray();
@@ -18,6 +21,10 @@ contract TiCtAcToE
 
     modifier onlyActiveUser() {
         require(msg.sender == activeUser, "Only active user can make a move");
+        _;
+    }
+    modifier onlyGameManager() {
+        require(msg.sender == gm, "Only active gm can make a move");
         _;
     }
 
@@ -55,6 +62,7 @@ contract TiCtAcToE
 
     function move(uint8 col, uint8 row) public onlyActiveUser  {
         require(isReady == false, "game is not ready");
+        require(winner == address(0), "Winner is set now ");
         require(leftMoves > 0, "there is no moves left");
         require(row < 3 && col < 3, "illegal move");
         require(board[col][row] == 0, "the cell is already used by another player");
@@ -70,32 +78,9 @@ contract TiCtAcToE
         }
 
         if(checkWinner() || leftMoves == 0){
-            reset();
-        }
-    }
-   
-    // function drawBoard() public view returns(string memory) {
-    //     string memory res = new string(30);
-    //     for(uint8 i = 0; i < 3; i++ ){
-    //         for(uint8 j = 0; j < 3; j++ ) {
-    //             if (board[i][j] == 1) {
-    //                 // res = res + " O ";
-    //             } else if (board[i][j] == 7) {
-    //                 // res = res + " X ";
-    //             } else if (board[i][j] == 0) {
-    //                 // res = res + " _ ";
-    //             }
-    //         }
-    //         // res = res + "\n";
-    //     }
-    //     return res;
-    // }
+            reward();
 
-    function reset() internal{
-        player1 = address(0);
-        player2 = address(0);
-        isReady = true;
-        leftMoves = 9;
+        }
     }
 
     function checkWinner() internal returns(bool){
@@ -103,7 +88,7 @@ contract TiCtAcToE
         //[(0,0),(0,1),(0,2)]
         //[(1,0),(1,1),(1,2)]
         //[(2,0),(2,1),(2,2)]
-        
+
         uint8 mainDiagSum = 0;
         uint8 diagSum = 0;
         for (uint8 i = 0; i < 3; i++) {
@@ -138,4 +123,22 @@ contract TiCtAcToE
         }
         return false;
     }
+
+
+
+
+    function reward() internal{
+        Player(winner).inkWins();
+
+//        player1 = address(0);
+//        player2 = address(0);
+//        isReady = true;
+//        leftMoves = 9;
+    }
+    function closeTable()onlyGameManager public{
+        require(winner != address(0));
+        reward();
+
+    }
+
 }

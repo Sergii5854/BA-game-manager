@@ -34,7 +34,7 @@ contract Player
     function inkWins() public onlyGame{
         wins++;
     }
-    function incLoses() public onlyGame{
+    function incLosses() public onlyGame{
         loses++;
     }
 

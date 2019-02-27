@@ -5,6 +5,7 @@ import "./Player.sol";
 
 contract GameManager
 {
+    address owner;
     address[] public players;
     address[] public games;
     address recentCreatedGame;
@@ -14,6 +15,12 @@ contract GameManager
     event playerJoinedGame(address gameAddress);
 
     constructor() public {
+        owner = msg.sender;
+
+    }
+    modifier olyOwner(){
+        require(msg.sender == owner, "only for owner " );
+        _;
 
     }
 
@@ -39,7 +46,6 @@ contract GameManager
     function joinGame(string memory nickName) public payable {
         require(msg.value >= 0.04 ether, 'Please pay some value to join game' );
 
-
         Player player;
         TiCtAcToE gameContract;
         player = createPlayer(msg.sender , nickName);
@@ -57,6 +63,14 @@ contract GameManager
         emit playerJoinedGame(address(gameContract));
 
     }
+
+    function closeGame(address gameForClose)olyOwner{
+        TiCtAcToE(gameForClose).closeTable();
+
+    }
+
+
+
 
 
 }
