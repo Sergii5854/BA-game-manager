@@ -11,12 +11,12 @@
    truffle compile --network ganache  
 ````
 
-### Run Test 
-````
-            
-````
-### Run Test 
+### Run Migrate 
 ````
    truffle migrate --network ganache  
 ````
 
+### Run Test 
+````
+   truffle test --network ganache  
+````

@@ -1,4 +1,5 @@
 const TiCtAcToE = artifacts.require("TiCtAcToE");
+const Player = artifacts.require("Player");
 
 contract('TiCtAcToE', accounts => {
 
@@ -14,29 +15,29 @@ contract('TiCtAcToE', accounts => {
         it("first joining player is a winner", async () => {
             await instance.setUser( owner)
             await instance.setUser(account)
-            
+
             await player1WinGameMoves(instance, account, owner)
-            
+
             assert.equal( await instance.winner(), owner )
         });
 
         it("second joining player is a winner", async () => {
             await instance.setUser( owner)
             await instance.setUser( account)
-    
+
             await player2WinGameMoves(instance, account, owner)
-            
+
             assert.equal( await instance.winner(), account )
         });
 
         it("no one is a winner", async () => {
             await instance.setUser( owner)
             await instance.setUser( account)
-    
+
             await tieGameMoves(instance, account, owner)
 
             assert.equal(await instance.winner() , '0x0000000000000000000000000000000000000000')
-            assert.equal(await instance.player1(), '0x0000000000000000000000000000000000000000')
+            assert.equal(await Player.at(player1()) , '0x0000000000000000000000000000000000000000')
             assert.equal(await instance.player2(), '0x0000000000000000000000000000000000000000')
             assert.equal(await instance.isReady(), true)
         });
@@ -45,13 +46,13 @@ contract('TiCtAcToE', accounts => {
             try {
                 await instance.setUser( owner)
                 await instance.setUser(account)
-        
+
                 await tieGameMoves(instance, account, owner)
 
                 await instance.move( 2,0, {from:owner})
                 assert.fail()
             } catch (error) {
-                assert(error.toString().includes('game is not ready'), error.toString())
+                assert(error.toString().includes('there is no moves left'), error.toString())
             }
 
         })

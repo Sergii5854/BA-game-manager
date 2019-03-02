@@ -11,9 +11,10 @@ contract TiCtAcToE
     address public player2; // 7 = x
     uint8[][] public board;
     address public winner = address(0);
+    uint256 public lastTime;
 
     constructor() public {
-        this.gm = gm  ;
+        gm = msg.sender;
         isReady = true;
         leftMoves = 9;
         initArray();
@@ -66,6 +67,8 @@ contract TiCtAcToE
         require(leftMoves > 0, "there is no moves left");
         require(row < 3 && col < 3, "illegal move");
         require(board[col][row] == 0, "the cell is already used by another player");
+
+        lastTime = block.timestamp;
         leftMoves = leftMoves - 1;
 
         if(msg.sender == player1 ){
@@ -79,7 +82,6 @@ contract TiCtAcToE
 
         if(checkWinner() || leftMoves == 0){
             reward();
-
         }
     }
 
@@ -125,19 +127,33 @@ contract TiCtAcToE
     }
 
 
-
-
     function reward() internal{
-        Player(winner).inkWins();
 
-//        player1 = address(0);
-//        player2 = address(0);
-//        isReady = true;
-//        leftMoves = 9;
+        if(winner == player1){
+            Player(player1).incWins();
+            Player(player2).incLosses();
+        }else if(winner == player2){
+            Player(player2).incWins();
+            Player(player1).incLosses();
+        }else{
+            Player(player2).incLosses();
+            Player(player1).incLosses();
+        }
     }
-    function closeTable()onlyGameManager public{
-        require(winner != address(0));
+
+    function closeTable() public{
+        if(winner == player1){
+            winner == player2;
+        }else if(winner == player2){
+           winner == player1;
+        }
         reward();
+    }
+
+    function checkTime() public{
+        if(block.timestamp - lastTime >= 60 ){
+            closeTable();
+        }
 
     }
 

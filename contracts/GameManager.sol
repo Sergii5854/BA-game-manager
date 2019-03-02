@@ -6,7 +6,7 @@ import "./Player.sol";
 contract GameManager
 {
     address owner;
-    address[] public players;
+    mapping(address => address) public players;
     address[] public games;
     address recentCreatedGame;
 
@@ -38,18 +38,27 @@ contract GameManager
     function createPlayer(address user,  string memory nickName) internal returns (Player){
         Player player;
         player = new Player(nickName, address(this), user);
-        players.push(address(player));
+        players[user] = address(player) ;
         return player;
     }
 
+    function isPlayer(address user) public returns(bool){
+        require(user != address(0));
+
+        players[user];
+        return (players[user] != address(0) ) ;
+    }
+
+
 
     function joinGame(string memory nickName) public payable {
-        require(msg.value >= 0.04 ether, 'Please pay some value to join game' );
+//        require(msg.value >= 0.04 ether, 'Please pay some value to join game' );
 
         Player player;
         TiCtAcToE gameContract;
-        player = createPlayer(msg.sender , nickName);
-
+        if(!isPlayer(msg.sender)){
+            player = createPlayer(msg.sender , nickName);
+        }
 
         if (recentCreatedGame == address(0)) {
             gameContract = createGame();
@@ -64,7 +73,7 @@ contract GameManager
 
     }
 
-    function closeGame(address gameForClose)olyOwner{
+    function closeGame(address gameForClose)olyOwner public {
         TiCtAcToE(gameForClose).closeTable();
 
     }
