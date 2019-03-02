@@ -7,18 +7,18 @@ contract Player
     uint256 public wins;
     uint256 public loses;
     string public nickName;
-    address recentCreatedGame;
+    address public recentCreatedGame;
     address playerOwner;
-    address _gm;
+    address public gm;
 
-    constructor(string memory name, address gm, address owner) public {
+    constructor(string memory name, address _gm, address owner) public {
         owner = playerOwner;
         nickName  = name;
         wins = 0;
         loses = 0;
-        _gm = gm;
-    }
+        gm = _gm;
 
+    }
 
     modifier onlyGame() {
         require(msg.sender == recentCreatedGame, "Only game can use that");
@@ -26,7 +26,7 @@ contract Player
     }
 
     modifier onlyGameManager() {
-        require(msg.sender == _gm, "Only game manager can use that");
+        require(msg.sender == gm, "Only game manager can use that");
         _;
     }
 

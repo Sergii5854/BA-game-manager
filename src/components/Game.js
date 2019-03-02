@@ -126,9 +126,13 @@ class Game extends Component {
       <BoardComponent/>
       <TimeTravelComponent/>
     */
+
+    const result = window.web3
+    console.log('res :  ',result);
     return html`
       <div className="Game">
         <h2>Tic Tac Toe</h2>
+        <button className="join-game">Join Game </button>
         <p>${status}</p>
         <${Board}
           handleClick={${(i) => this.handleClick(i)}}

@@ -13,6 +13,8 @@ contract TiCtAcToE
     address public winner = address(0);
     uint256 public lastTime;
 
+    event UserMoved(address  player,  uint  col, uint  row  ) ;
+
     constructor() public {
         gm = msg.sender;
         isReady = true;
@@ -75,6 +77,8 @@ contract TiCtAcToE
             board[col][row] = board[col][row] + 1;
             activeUser = player2;
 
+
+
         } else if(msg.sender == player2) {
             board[col][row] = board[col][row] + 7;
             activeUser = player1;
@@ -83,6 +87,8 @@ contract TiCtAcToE
         if(checkWinner() || leftMoves == 0){
             reward();
         }
+
+        emit UserMoved(activeUser ,col , row );
     }
 
     function checkWinner() internal returns(bool){

@@ -61,6 +61,11 @@ p {
     align-items: center;
     flex-grow: 1;
 }
+.join-game{
+  padding: 10px 5px;
+  border-radius: 5px;
+
+}
 
 
 .Board {
